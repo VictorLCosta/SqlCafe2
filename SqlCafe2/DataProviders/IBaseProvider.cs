@@ -9,7 +9,7 @@ namespace SqlCafe2.DataProviders
     {
         bool IsTransactionSupported { get; }
 
-        DbCommand InitCommand(CommandType commandType, string commandText);
+        DbCommand InitCommand(ref string commandText, CommandType commandType);
         DbConnection CreateConnection(string connectionString);
     }
 }

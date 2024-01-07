@@ -1,7 +1,6 @@
 using System;
+using System.Data;
 using System.Data.Common;
-using System.Threading.Tasks;
-using SqlCafe2.DataProviders;
 
 namespace SqlCafe2
 {
@@ -12,18 +11,26 @@ namespace SqlCafe2
         , Async.IAsyncDisposable
     #endif
     {
-        internal CafeDataOptions Options { get; }
+        CafeDataOptions Options { get; }
 
-        int ExecuteNonQuery();
+        int ExecuteNonQuery(string command);
         object? ExecuteScalar(DbCommand command);
 
-        void ExecuteReader();
+        IDataReader GetDataReader(string command);
+        DataTable GetDataTable(string command);
+        DataTable GetDataTable(string command, object parameters);
 
         void BeginTransaction();
+        void BeginTransaction(IsolationLevel iso);
         void CommitTransaction();
         void RollbackTransaction();
 
+        void CheckConnection();
+        void Open();
         void Close();
-        Task CloseAsync();
+
+        bool UseTran(Action action, Action<Exception>? errorCallback = null);
+        T UseTran<T>(Func<T> action, Action<Exception>? errorCallback = null);
+
     }
 }
