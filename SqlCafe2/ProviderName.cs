@@ -4,6 +4,8 @@ namespace SqlCafe2
     {
         public const string PostgreSql = "PostgreSQL";
 
+        public const string SqlServer = "SqlServer";
+
         public const string Oracle = "Oracle";
     }
 }

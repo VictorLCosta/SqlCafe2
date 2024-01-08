@@ -73,16 +73,25 @@ namespace SqlCafe2
 
         public virtual void Close()
         {
-            throw new NotImplementedException();
+            
         }
 
         #endregion
 
         #region Core
 
-        public int ExecuteNonQuery(string command)
+        public virtual int ExecuteNonQuery(string command, object? parameters = null)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var cmd = Provider.InitCommand(ref command, CommandType.Text);
+
+                return cmd.ExecuteNonQuery();
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
         }
 
         public object? ExecuteScalar(DbCommand command)
@@ -95,14 +104,25 @@ namespace SqlCafe2
             throw new NotImplementedException();
         }
 
-        public DataTable GetDataTable(string command)
+        public DataTable GetDataTable(string command, object? parameters = null)
         {
-            throw new NotImplementedException();
-        }
+            try
+            {
+                DataTable dtReturn = new();
 
-        public DataTable GetDataTable(string command, object parameters)
-        {
-            throw new NotImplementedException();
+                using DbCommand cmd = Provider.InitCommand(ref command, CommandType.Text);
+
+                using IDataReader reader = cmd.ExecuteReader();
+
+                dtReturn.Load(reader);
+
+                return dtReturn;
+            }
+            catch (System.Exception)
+            {
+                
+                throw;
+            }
         }
 
         #endregion
@@ -111,22 +131,24 @@ namespace SqlCafe2
 
         public void BeginTransaction()
         {
-            throw new NotImplementedException();
+            CheckConnection();
+            Connection.BeginTransaction();
         }
 
         public void BeginTransaction(IsolationLevel iso)
         {
-            throw new NotImplementedException();
+            CheckConnection();
+            Connection.BeginTransaction(iso);
         }
 
         public void CommitTransaction()
         {
-            throw new NotImplementedException();
+            CheckConnection();
         }
 
         public void RollbackTransaction()
         {
-            throw new NotImplementedException();
+            CheckConnection();
         }
 
         #endregion
@@ -147,12 +169,16 @@ namespace SqlCafe2
 
         #region Dispose
 
-        void IDisposable.Dispose()
+        public void Dispose()
         {
             throw new NotImplementedException();
         }
 
-        Task IAsyncDisposable.DisposeAsync()
+        #if NATIVE_ASYNC
+        public virtual ValueTask DisposeAsync()
+        #else
+        public virtual Task DisposeAsync()
+        #endif
         {
             throw new NotImplementedException();
         }

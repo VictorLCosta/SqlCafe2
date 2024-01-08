@@ -13,12 +13,13 @@ namespace SqlCafe2
     {
         CafeDataOptions Options { get; }
 
-        int ExecuteNonQuery(string command);
+        int ExecuteNonQuery(string command, object? parameters = null);
+
+
         object? ExecuteScalar(DbCommand command);
 
         IDataReader GetDataReader(string command);
-        DataTable GetDataTable(string command);
-        DataTable GetDataTable(string command, object parameters);
+        DataTable GetDataTable(string command, object? parameters = null);
 
         void BeginTransaction();
         void BeginTransaction(IsolationLevel iso);
