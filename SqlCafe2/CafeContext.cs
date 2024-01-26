@@ -2,16 +2,24 @@ using System;
 using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
-using SqlCafe2.Async;
 using SqlCafe2.DataProviders;
 
 namespace SqlCafe2
 {
-    public class CafeContext : ICafeContext
+    public partial class CafeContext : ICafeContext
     {
+        #region Fields
+
         private bool _disposed;
 
+        #endregion
+
         #region Constructors
+
+        public CafeContext()
+        {
+            
+        }
 
         public CafeContext(string connectionString)
         {
@@ -23,7 +31,7 @@ namespace SqlCafe2
              
         }
 
-        public CafeContext(string providerName, string connectionString, Func<CafeDataOptions, CafeDataOptions> optionsSetter)
+        public CafeContext(string providerName, string connectionString, Func<CafeDataOptions> optionsSetter)
         {
             
         }
@@ -42,6 +50,8 @@ namespace SqlCafe2
         public IBaseProvider Provider { get; set; }
 
         public IDbConnection Connection { get; set; }
+
+        public IDbTransaction? Transaction { get; set; }
 
         public string? ConnectionString { get; }
 
@@ -73,7 +83,15 @@ namespace SqlCafe2
 
         public virtual void Close()
         {
-            
+            if (this.Transaction != null)
+            {
+                this.Transaction = null;
+            }
+            if (this.Connection != null && this.Connection.State == ConnectionState.Open)
+            {
+                this.Connection.Close();
+                this.Connection.Dispose();
+            }
         }
 
         #endregion
@@ -84,7 +102,7 @@ namespace SqlCafe2
         {
             try
             {
-                var cmd = Provider.InitCommand(ref command, CommandType.Text);
+                var cmd = Provider.InitCommand(command, CommandType.Text);
 
                 return cmd.ExecuteNonQuery();
             }
@@ -94,14 +112,36 @@ namespace SqlCafe2
             }
         }
 
-        public object? ExecuteScalar(DbCommand command)
+        public object? GetScalar(string command, object? parameters = null)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using DbCommand cmd = Provider.InitCommand(command, CommandType.Text);
+
+                return cmd.ExecuteScalar();
+            }
+            catch (System.Exception)
+            {
+                
+                throw;
+            }
         }
 
         public IDataReader GetDataReader(string command)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using DbCommand cmd = Provider.InitCommand(command, CommandType.Text);
+
+                IDataReader reader = cmd.ExecuteReader();
+
+                return reader;
+            }
+            catch (System.Exception)
+            {
+                
+                throw;
+            }
         }
 
         public DataTable GetDataTable(string command, object? parameters = null)
@@ -110,7 +150,7 @@ namespace SqlCafe2
             {
                 DataTable dtReturn = new();
 
-                using DbCommand cmd = Provider.InitCommand(ref command, CommandType.Text);
+                using DbCommand cmd = Provider.InitCommand(command, CommandType.Text);
 
                 using IDataReader reader = cmd.ExecuteReader();
 
@@ -132,23 +172,25 @@ namespace SqlCafe2
         public void BeginTransaction()
         {
             CheckConnection();
-            Connection.BeginTransaction();
+            Transaction ??= Connection.BeginTransaction();
         }
 
         public void BeginTransaction(IsolationLevel iso)
         {
             CheckConnection();
-            Connection.BeginTransaction(iso);
+            Transaction ??= Connection.BeginTransaction(iso);
         }
 
         public void CommitTransaction()
         {
-            CheckConnection();
+            Transaction?.Commit();
+            Transaction = null;
         }
 
         public void RollbackTransaction()
         {
-            CheckConnection();
+            Transaction?.Rollback();
+            Transaction = null;
         }
 
         #endregion
@@ -157,12 +199,40 @@ namespace SqlCafe2
 
         bool ICafeContext.UseTran(Action action, Action<Exception>? errorCallback)
         {
-            throw new NotImplementedException();
+            try
+            {
+                BeginTransaction();
+                action?.Invoke();
+                CommitTransaction();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                RollbackTransaction();
+                errorCallback?.Invoke(ex);
+            }
+
+            return false;
         }
 
         T ICafeContext.UseTran<T>(Func<T> action, Action<Exception>? errorCallback)
         {
-            throw new NotImplementedException();
+            T result = Activator.CreateInstance<T>();
+
+            try
+            {
+                BeginTransaction();
+                if(action != null) result = action.Invoke();
+                CommitTransaction();
+            }
+            catch (Exception ex)
+            {
+                RollbackTransaction();
+                errorCallback?.Invoke(ex);
+            }
+
+            return result;
         }
 
         #endregion
@@ -171,7 +241,12 @@ namespace SqlCafe2
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            _disposed = true;
+
+            Connection.Dispose();
+            Transaction?.Dispose();
+
+            
         }
 
         #if NATIVE_ASYNC

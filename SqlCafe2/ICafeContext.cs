@@ -1,6 +1,7 @@
 using System;
 using System.Data;
 using System.Data.Common;
+using System.Threading.Tasks;
 
 namespace SqlCafe2
 {
@@ -14,9 +15,9 @@ namespace SqlCafe2
         CafeDataOptions Options { get; }
 
         int ExecuteNonQuery(string command, object? parameters = null);
-
-
-        object? ExecuteScalar(DbCommand command);
+        Task<int> ExecuteNonQueryAsync(string command, object? parameters = null);
+        
+        object? GetScalar(string command, object? parameters = null);
 
         IDataReader GetDataReader(string command);
         DataTable GetDataTable(string command, object? parameters = null);

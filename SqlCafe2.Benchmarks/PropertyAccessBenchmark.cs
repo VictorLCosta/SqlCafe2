@@ -1,5 +1,7 @@
+using System.Linq.Expressions;
+using System.Reflection;
 using BenchmarkDotNet.Attributes;
-using FastMember;
+using ImmediateReflection;
 
 namespace SqlCafe2.Benchmarks
 {   
@@ -8,15 +10,20 @@ namespace SqlCafe2.Benchmarks
     public class PropertyAccessBenchmark
     {
         private Usuario _usuario =>
-            new("Aleatório", 22, new { Carro = "McLaren" });
+            new(Guid.NewGuid(), "Aleatório", 22);
 
-        private ObjectAccessor _accessor =>
-            ObjectAccessor.Create(_usuario);
+
+        private ImmediateType type =>
+            TypeAccessor.Get<Usuario>();
 
         [Benchmark(Baseline = true)]
         public object GetProperyValue() => _usuario.GetType().GetProperty("Nome")?.GetValue(_usuario, null)!;
 
         [Benchmark]
-        public object GetPropertyValue2() => _accessor["Nome"];
+        public object GetImmediatePropertyValue() => type.Properties["Nome"].GetValue(_usuario);
+
+        [Benchmark]
+        public object GetImmediatePropertyValue2() => type.Properties["Nome"].GetValue(_usuario);
+
     }
 }

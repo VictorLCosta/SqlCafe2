@@ -8,25 +8,26 @@ namespace SqlCafe2.Benchmarks
 {
     internal class Usuario
     {
+        public Guid Id { get; set; }
         public string Nome { get; set; }
         public int Idade { get; set; }
-        public object Detalhes { get; set; }
 
         public Usuario()
         {
-            
+            Nome = "";
+            Idade = 0;
         }
 
-        public Usuario(string nome, int idade, object detalhes)
+        public Usuario(Guid id, string nome, int idade)
         {
+            Id = id;
             Nome = nome;
             Idade = idade;
-            Detalhes = detalhes;
         }
 
         public override string ToString()
         {
-            return $"Nome: {Nome}, Idade: {Idade}, Detalhes: {Detalhes}";
+            return $"Nome: {Nome}, Idade: {Idade}";
         }
     }
 
