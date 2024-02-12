@@ -28,7 +28,9 @@ namespace SqlCafe2
 
         public CafeContext(IBaseProvider provider, string connectionString)
         {
-             
+            ConnectionString = connectionString;
+
+            Connection = provider.CreateConnection(connectionString);
         }
 
         public CafeContext(string providerName, string connectionString, Func<CafeDataOptions> optionsSetter)
@@ -47,13 +49,9 @@ namespace SqlCafe2
 
         public CafeDataOptions Options { get; }
 
-        public IBaseProvider Provider { get; set; }
-
         public IDbConnection Connection { get; set; }
 
         public IDbTransaction? Transaction { get; set; }
-
-        public string? ConnectionString { get; }
 
         public int? CommandTimeout { get; set; }
 
@@ -104,7 +102,11 @@ namespace SqlCafe2
             {
                 var cmd = Provider.InitCommand(command, CommandType.Text);
 
-                return cmd.ExecuteNonQuery();
+                int result = cmd.ExecuteNonQuery();
+
+                if(Options.IsAutoCloseConnection) Close();
+
+                return result;
             }
             catch (System.Exception)
             {
@@ -241,12 +243,13 @@ namespace SqlCafe2
 
         public void Dispose()
         {
-            _disposed = true;
+            if (!_disposed)
+            {
+                _disposed = true;
 
-            Connection.Dispose();
-            Transaction?.Dispose();
-
-            
+                Connection.Dispose();
+                Transaction?.Dispose();
+            }
         }
 
         #if NATIVE_ASYNC
@@ -266,4 +269,5 @@ namespace SqlCafe2
         }
 
     }
+    
 }

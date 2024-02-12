@@ -1,20 +1,20 @@
 #if NETFRAMEWORK
-using System;
-using System.Collections.Specialized;
 using System.Configuration;
+using System.Collections.Specialized;
+using System;
 
 namespace SqlCafe2.Configuration
 {
-    public class ElementBase : ConfigurationElement
+    public abstract class ElementBase : ConfigurationElement
     {
-        private readonly ConfigurationPropertyCollection properties = new ConfigurationPropertyCollection();
-		protected override ConfigurationPropertyCollection Properties => properties;
+        private readonly ConfigurationPropertyCollection _properties = new ConfigurationPropertyCollection();
+		protected override ConfigurationPropertyCollection Properties => _properties;
 
         protected override bool OnDeserializeUnrecognizedAttribute(string name, string value)
 		{
 			var property = new ConfigurationProperty(name, typeof(string), value);
 
-			properties.Add(property);
+			_properties.Add(property);
 
 			base[property] = value;
 
@@ -24,7 +24,6 @@ namespace SqlCafe2.Configuration
 		}
 
         public NameValueCollection Attributes { get; } = new NameValueCollection(StringComparer.OrdinalIgnoreCase);
-
     }
 }
 #endif

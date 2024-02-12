@@ -4,16 +4,16 @@ using System.Configuration;
 namespace SqlCafe2.Configuration
 {
     [ConfigurationCollection(typeof(ConnectionStringElement), AddItemName = "add")]
-    public class ConnectionStringExCollection : ElementBaseCollection<ConnectionStringElement>
+    public class ConnectionStringElementCollection : ElementCollectionBase<ConnectionStringElement>
     {
         protected override ConfigurationElement CreateNewElement()
         {
             return new ConnectionStringElement();
         }
 
-        protected override object GetElementKey(ConfigurationElement element)
+        protected override object GetElementKey(ConnectionStringElement element)
         {
-            return ((ConnectionStringElement)element).Name;
+            return element.Name;
         }
     }
 }

@@ -37,7 +37,7 @@ dotnet_naming_rule.public_and_internal_should_be_pascal_case.style = constant_st
 dotnet_naming_symbols.public_internal_fields.applicable_kinds = field
 dotnet_naming_symbols.public_internal_fields.applicable_accessibilities = public, internal
 
-dotnet_naming_style.public_internal_fields_style.capitalization = pascal_case
+dotnet_naming_style.public_internal_fields_style.capitalization = camel_case
 
 # Instance fields are camelCase and start with _
 dotnet_naming_rule.instance_fields_should_be_camel_case.severity = suggestion

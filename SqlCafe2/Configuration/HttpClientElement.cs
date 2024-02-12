@@ -1,74 +1,34 @@
 #if NETFRAMEWORK
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 
 namespace SqlCafe2.Configuration
 {
-    public class HttpClientElement : ElementBase
+    public class HttpClientElement : ElementBase, IHttpClientSettings
     {
-        private static ConfigurationProperty baseAddress = new ConfigurationProperty("baseAddress", typeof(BaseAddressElement), new BaseAddressElement(), ConfigurationPropertyOptions.IsRequired);
-        private static ConfigurationProperty timeout = new ConfigurationProperty("timeout", typeof(TimeoutElement), new TimeoutElement(), ConfigurationPropertyOptions.None);
-        private static ConfigurationProperty retry = new ConfigurationProperty("retry", typeof(RetryElement), new RetryElement(), ConfigurationPropertyOptions.None);
-        private static ConfigurationProperty headersCollection = new ConfigurationProperty("defaultRequestHeaders", typeof(HeaderCollection), new HeaderCollection(), ConfigurationPropertyOptions.None);
+        [ConfigurationProperty("baseAddress", IsRequired = true)]
+        public string BaseAddress => (string)this["baseAddress"];
 
-        public HttpClientElement()
-        {
-            Properties.Add(baseAddress);
-            Properties.Add(timeout);
-            Properties.Add(retry);
-            Properties.Add(headersCollection);
-        }
+        [ConfigurationProperty("defaultHeaders", IsDefaultCollection = false)]
+        public HeaderElementCollection Headers => (HeaderElementCollection)this["defaultHeaders"];
 
-        public BaseAddressElement BaseAddress
-        {
-            get => (BaseAddressElement)this["baseAddress"]; 
-            set { this["baseAddress"] = value; }
-        }
+        [ConfigurationProperty("timeout", IsRequired = false, DefaultValue = 100)]
+        public int Timeout => (int)this["timeout"];
 
-        public TimeoutElement Timeout
-        {
-            get { return (TimeoutElement)this["timeout"]; }
-            set { this["timeout"] = value; }
-        }
+        [ConfigurationProperty("retry", IsRequired = false, DefaultValue = 100)]
+        public int Retry => (int)this["retry"];
 
-        [IntegerValidator(MinValue = 0)]
-        public RetryElement Retry
-        {
-            get { return (RetryElement)this["retry"]; }
-            set { this["retry"] = value; }
-        }
+        private IEnumerable<IHeader> _defaultHeaders = Array.Empty<IHeader>();
 
-        public HeaderCollection DefaultRequestHeaders
+        public IEnumerable<IHeader> DefaultHeaders
         {
-            get { return (HeaderCollection)this["defaultRequestHeaders"]; }
-            set { this["defaultRequestHeaders"] = value; }
-        }
-    }
-
-    public class BaseAddressElement : ElementBase
-    {
-        [ConfigurationProperty("value", IsRequired = true)]
-        public string Value
-        {
-            get => (string)base["value"];
-        }
-    }
-
-    public class TimeoutElement : ElementBase
-    {
-        [ConfigurationProperty("value", IsRequired = false)]
-        public TimeSpan Value
-        {
-            get => (TimeSpan)base["value"];
-        }
-    }
-
-    public class RetryElement : ElementBase
-    {
-        [ConfigurationProperty("value", IsRequired = false)]
-        public int Value
-        {
-            get => (int)base["value"];
+            get
+            {
+                var headersList = Headers.ToList();
+                return _defaultHeaders ??= headersList;
+            }
+            set => _defaultHeaders = value;
         }
     }
 }

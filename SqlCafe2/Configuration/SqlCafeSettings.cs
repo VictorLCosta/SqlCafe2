@@ -1,51 +1,29 @@
-#if NETFRAMEWORK
-using System.Configuration;
+using System.Collections.Generic;
 
 namespace SqlCafe2.Configuration
 {
-    /// <summary>
-    /// Represents the configuration settings for SqlCafe.
-    /// </summary>
-    public class SqlCafeSettings : ConfigurationSection
+    public class SqlCafeSettings : ISqlCafeSettings
     {
-        private static readonly ConfigurationPropertyCollection properties = new();
+        private readonly IConnectionString _connectionString;
 
-        private static readonly ConfigurationProperty connectionStrings = new("connectionStringsEx", typeof(ConnectionStringExCollection), new ConnectionStringExCollection(), ConfigurationPropertyOptions.IsRequired);
-        private static readonly ConfigurationProperty httpClient = new("httpClient", typeof(HttpClientElement), new HttpClientElement(), ConfigurationPropertyOptions.None);
-
-        public SqlCafeSettings()
+        public SqlCafeSettings(string connectionString, string name, string providerName, IHttpClientSettings? httpClientSettings = null)
         {
-            properties.Add(connectionStrings);
-            properties.Add(httpClient);
+            _connectionString = new ConnectionStringSettings(connectionString, name, providerName);
+            HttpClientSettings = httpClientSettings;
         }
 
-        private readonly static SqlCafeSettings? instance;
+        public string DefaultProvider => ProviderName.SqlServer;
 
-        public static SqlCafeSettings? Instance 
+        public IHttpClientSettings? HttpClientSettings { get; }
+
+        public bool HasHttpClient => HttpClientSettings != null;
+
+        public IEnumerable<IConnectionString> ConnectionStringsSettings
         {
-            get 
+            get
             {
-                if (instance == null)
-                {
-                    return (SqlCafeSettings)ConfigurationManager.GetSection("sqlcafe") ?? new SqlCafeSettings();
-                }
-                return instance; 
-            } 
-        }
-
-        protected override ConfigurationPropertyCollection Properties => properties;
-
-        public ConnectionStringExCollection ConnectionStrings
-        {
-            get { return (ConnectionStringExCollection)this[connectionStrings]; }
-            set { this[connectionStrings] = value; }
-        }
-
-        public HttpClientElement HttpClient 
-        {
-            get { return (HttpClientElement)this[httpClient]; } 
-            set { this[httpClient] = value; }
+                yield return _connectionString;
+            }
         }
     }
 }
-#endif

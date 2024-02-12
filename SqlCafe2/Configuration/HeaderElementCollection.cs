@@ -1,13 +1,10 @@
 #if NETFRAMEWORK
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Configuration;
 
 namespace SqlCafe2.Configuration
 {
     [ConfigurationCollection(typeof(HeaderElement), AddItemName = "add")]
-    public class HeaderCollection : ElementBaseCollection<HeaderElement>
+    public class HeaderElementCollection : ElementCollectionBase<HeaderElement>
     {
         protected override ConfigurationElement CreateNewElement()
         {
@@ -16,7 +13,7 @@ namespace SqlCafe2.Configuration
 
         protected override object GetElementKey(HeaderElement element)
         {
-            return ((HeaderElement)element).Key;
+            return element.Key;
         }
     }
 }
