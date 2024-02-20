@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
 using SqlCafe2.DataProviders;
+using SqlCafe2.Remote;
 
 namespace SqlCafe2
 {
@@ -18,7 +19,7 @@ namespace SqlCafe2
 
         public CafeContext()
         {
-            
+            UseDefaultConfiguration();
         }
 
         public CafeContext(string connectionString)
@@ -28,17 +29,21 @@ namespace SqlCafe2
 
         public CafeContext(IBaseProvider provider, string connectionString)
         {
+            Provider = provider;
             ConnectionString = connectionString;
-
-            Connection = provider.CreateConnection(connectionString);
+            Connection = Provider.CreateConnection(connectionString);
         }
 
         public CafeContext(string providerName, string connectionString, Func<CafeDataOptions> optionsSetter)
         {
-            
+            Provider = GetDataProvider(providerName);
+            ConnectionString = connectionString;
+            Connection = Provider.CreateConnection(connectionString);
+
+            Options =  optionsSetter.Invoke();
         }
 
-        public CafeContext(IBaseProvider provider, string connectionString, Func<CafeDataOptions, CafeDataOptions> optionsSetter)
+        public CafeContext(Func<CafeDataOptions> optionsSetter)
         {
             
         }
@@ -47,13 +52,23 @@ namespace SqlCafe2
 
         #region Properties
 
-        public CafeDataOptions Options { get; }
+        public CafeDataOptions Options { get; private set; }
 
-        public IDbConnection Connection { get; set; }
+        public IDbConnection Connection { get; private set; }
 
-        public IDbTransaction? Transaction { get; set; }
+        public IDbTransaction? Transaction { get; private set; }
 
-        public int? CommandTimeout { get; set; }
+        public int? CommandTimeout { get; private set; }
+
+        public string ConnectionStringName { get; private set; } = string.Empty;
+
+        public string ConnectionString { get; private set; }
+
+        public IBaseProvider Provider { get; internal set; }
+
+        public ICafeHttpClient? HttpClient { get; private set; }
+
+        public bool HasHttpClient => HttpClient != null;
 
         #endregion
 

@@ -10,7 +10,7 @@ namespace SqlCafe2.DataProviders
 {
     public abstract class BaseProvider : IBaseProvider
     {
-        public string ProviderName { get; }
+        public abstract string ProviderName { get; }
 
         public ISqlBuilder sqlBuider => throw new NotImplementedException();
 
