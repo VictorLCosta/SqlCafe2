@@ -15,6 +15,6 @@ namespace SqlCafe2.Configuration
 
         public string ProviderName { get; }
 
-        public bool IsGlobal => false;
+        public bool? IsGlobal => false;
     }
 }

@@ -38,8 +38,10 @@ namespace SqlCafe2
             _providers.Add("SqlServer", new SqlServerProvider());
         }
 
-        public static IBaseProvider GetDataProvider(string providerName)
+        public static IBaseProvider GetDataProvider(string? providerName)
         {
+            if (providerName == null) return GetDataProvider("SqlServer");
+
             if (_providers.TryGetValue(providerName, out var provider))
             {
                 return provider;
@@ -52,7 +54,7 @@ namespace SqlCafe2
         {
             foreach (var connectionString in connectionStrings)
             {
-                if(connectionString.IsGlobal)
+                if(connectionString.IsGlobal.HasValue)
                 {
                     _defaultConnectionString = connectionString; 
                     _connectionStrings.Add(connectionString.Name, connectionString);
@@ -80,7 +82,7 @@ namespace SqlCafe2
 
             ConnectionStringName = DefaultConnectionString?.Name ?? string.Empty;
             ConnectionString = TryGetConnectionString(ConnectionStringName) ?? string.Empty;
-            Provider = GetDataProvider(DefaultConnectionString!.ProviderName);
+            Provider = GetDataProvider(DefaultConnectionString?.ProviderName);
 
             if(DefaultSettings?.HttpClientSettings != null)
             {

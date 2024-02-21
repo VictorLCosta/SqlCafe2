@@ -18,6 +18,6 @@ namespace SqlCafe2.Configuration
 
         public int Retry { get; }
 
-        public IEnumerable<IHeader> DefaultHeaders { get; } = Array.Empty<IHeader>();
+        public IEnumerable<IHeader> DefaultHeaders { get; } = new IHeader[0];
     }
 }

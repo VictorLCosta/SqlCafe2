@@ -1,4 +1,5 @@
 #if NETFRAMEWORK
+using System;
 using System.Configuration;
 
 namespace SqlCafe2.Configuration
@@ -27,11 +28,7 @@ namespace SqlCafe2.Configuration
         }
 
         [ConfigurationProperty("isGlobal", IsRequired = false, DefaultValue = false)]
-        public bool IsGlobal
-        {
-            get => (bool)this["isGlobal"];
-            set => this["isGlobal"] = value;
-        }
+        public bool? IsGlobal => Convert.ToBoolean(this[""]);
     }
 }
 #endif

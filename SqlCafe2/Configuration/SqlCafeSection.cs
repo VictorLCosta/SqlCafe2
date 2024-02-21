@@ -1,6 +1,7 @@
 #if NETFRAMEWORK
 using System.Collections.Generic;
 using System.Configuration;
+using System.Security;
 
 namespace SqlCafe2.Configuration
 {
@@ -25,7 +26,14 @@ namespace SqlCafe2.Configuration
             {
                 if (instance == null)
                 {
-                    return (SqlCafeSection)ConfigurationManager.GetSection("sqlcafe") ?? new SqlCafeSection();
+                    try 
+                    {
+                        return (SqlCafeSection)ConfigurationManager.GetSection("sqlcafe") ?? new SqlCafeSection();
+                    }
+                    catch (SecurityException)
+                    {
+                        return null;
+                    }
                 }
                 return instance; 
             } 
