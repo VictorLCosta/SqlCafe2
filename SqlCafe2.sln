@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqlCafe2.Benchmarks", "SqlC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlCafe.Playground", "SqlCafe.Playground\SqlCafe.Playground.csproj", "{A317FF47-E8DB-429E-823F-CF0192949DB2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Webservice", "SqlCafe2.Webservice\Webservice.csproj", "{40C197A8-6E06-4684-9CC8-5FD095D2DF22}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{A317FF47-E8DB-429E-823F-CF0192949DB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A317FF47-E8DB-429E-823F-CF0192949DB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A317FF47-E8DB-429E-823F-CF0192949DB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40C197A8-6E06-4684-9CC8-5FD095D2DF22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40C197A8-6E06-4684-9CC8-5FD095D2DF22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40C197A8-6E06-4684-9CC8-5FD095D2DF22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40C197A8-6E06-4684-9CC8-5FD095D2DF22}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
