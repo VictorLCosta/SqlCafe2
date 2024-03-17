@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using SqlCafe2.Common;
 using SqlCafe2.Configuration;
 using SqlCafe2.DataProviders;
+using SqlCafe2.DataProviders.Sqlite;
 using SqlCafe2.DataProviders.SqlServer;
 
 namespace SqlCafe2
@@ -36,6 +37,7 @@ namespace SqlCafe2
         static CafeContext()
         {
             _providers.Add("SqlServer", new SqlServerProvider());
+            _providers.Add("Sqlite", new SqliteProvider());
         }
 
         public static IBaseProvider GetDataProvider(string? providerName)
@@ -54,7 +56,7 @@ namespace SqlCafe2
         {
             foreach (var connectionString in connectionStrings)
             {
-                if(connectionString.IsGlobal.HasValue)
+                if(connectionString.IsGlobal == true)
                 {
                     _defaultConnectionString = connectionString; 
                     _connectionStrings.Add(connectionString.Name, connectionString);
@@ -83,6 +85,7 @@ namespace SqlCafe2
             ConnectionStringName = DefaultConnectionString?.Name ?? string.Empty;
             ConnectionString = TryGetConnectionString(ConnectionStringName) ?? string.Empty;
             Provider = GetDataProvider(DefaultConnectionString?.ProviderName);
+            Connection = Provider.CreateConnection(ConnectionString);
 
             if(DefaultSettings?.HttpClientSettings != null)
             {

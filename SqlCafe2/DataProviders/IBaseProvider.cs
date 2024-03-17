@@ -12,7 +12,8 @@ namespace SqlCafe2.DataProviders
 
         SqlProviderFlags ProviderFlags { get; }
 
-        DbCommand InitCommand(string commandText, CommandType commandType, object? parameters = null);
         DbConnection CreateConnection(string connectionString);
+
+        void InitCommand(ref DbCommand command, string commandText, CommandType commandType, int commandTimeout, object? parameters = null);
     }
 }

@@ -2,6 +2,17 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "mybuild",
+            "command":"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe",
+            "type":"shell",
+            "args":[
+                "${workspaceFolder}/SqlCafe.Playground/SqlCafe.Playground.csproj",
+                "/t:Build",
+                "/p:Configuration=Debug",
+                "/p:Platform=\"AnyCPU\""
+            ]
+        },
+        {
             "label": "build",
             "command": "dotnet",
             "type": "process",

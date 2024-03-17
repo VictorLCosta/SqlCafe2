@@ -2,17 +2,34 @@
     "version": "0.2.0",
     "configurations": [
         {
-            // Use IntelliSense to find out which attributes exist for C# debugging
-            // Use hover for the description of the existing attributes
-            // For further information visit https://github.com/dotnet/vscode-csharp/blob/main/debugger-launchjson.md
-            "name": ".NET Core Launch (console)",
+            "name": "Webservice",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/SqlCafe2.Benchmarks/bin/Debug/net8.0/SqlCafe2.Benchmarks.dll",
+            "program": "${workspaceFolder}/SqlCafe2.Webservice/bin/Debug/net8.0/Webservice.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/SqlCafe2.Benchmarks",
+            "cwd": "${workspaceFolder}/SqlCafe2.Webservice",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            }
+        },
+        {
+            // Use IntelliSense to find out which attributes exist for C# debugging
+            // Use hover for the description of the existing attributes
+            // For further information visit https://github.com/dotnet/vscode-csharp/blob/main/debugger-launchjson.md
+            "name": "Playground",
+            "type": "clr",
+            "request": "launch",
+            "preLaunchTask": "mybuild",
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceFolder}/SqlCafe.Playground/bin/Debug/SqlCafe.Playground.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}/SqlCafe.Playground",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "internalConsole",
             "stopAtEntry": false

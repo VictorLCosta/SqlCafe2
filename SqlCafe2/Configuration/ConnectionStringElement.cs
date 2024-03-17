@@ -28,7 +28,11 @@ namespace SqlCafe2.Configuration
         }
 
         [ConfigurationProperty("isGlobal", IsRequired = false, DefaultValue = false)]
-        public bool? IsGlobal => Convert.ToBoolean(this[""]);
+        public bool IsGlobal
+        {
+            get => Convert.ToBoolean(Attributes["isGlobal"]);
+            set => this["isGlobal"] = value;
+        }
     }
 }
 #endif

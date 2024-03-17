@@ -1,26 +1,19 @@
 using System.Data;
 using System.Data.Common;
+using System.Data.SQLite;
 
-#if NETFRAMEWORK
-using System.Data.SqlClient;
-#else
-using Microsoft.Data.SqlClient;
-#endif
-
-namespace SqlCafe2.DataProviders.SqlServer
+namespace SqlCafe2.DataProviders.Sqlite
 {
-    public class SqlServerProvider : BaseProvider, IBaseProvider
+    public class SqliteProvider : BaseProvider, IBaseProvider
     {
-        public override string ProviderName => "SqlServer";
+        public override string ProviderName => "Sqlite";
 
         protected override DbConnection CreateConnectionInternal(string connectionString)
-        {
-            return new SqlConnection(connectionString);
-        }
+            => new SQLiteConnection(connectionString);
 
         protected override void InitCommandInternal(ref DbCommand command, string commandText, CommandType commandType, int commandTimeout, object? parameters = null)
         {
-            var cmd = (SqlCommand)command;
+            var cmd = (SQLiteCommand)command;
 
             cmd.CommandText = commandText;
             cmd.CommandTimeout = commandTimeout;

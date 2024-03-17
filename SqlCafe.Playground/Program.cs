@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SqlCafe2;
+﻿using SqlCafe2;
 
 namespace SqlCafe.Playground
 {
@@ -13,7 +8,9 @@ namespace SqlCafe.Playground
         {
             using (CafeContext context = new CafeContext())
             {
-                var a = 1;
+                var a = context.GetDataTable("SELECT * FROM [dbo].[Authors]");
+
+                var b = a;
             }
         }
     }

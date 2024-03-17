@@ -20,9 +20,10 @@ namespace SqlCafe2.DataProviders
 
         protected abstract DbConnection CreateConnectionInternal(string connectionString);
 
-        public DbCommand InitCommand(string commandText, CommandType commandType, object? parameters = null)
-        {
-            throw new NotImplementedException();
-        }
+        public void InitCommand(ref DbCommand command, string commandText, CommandType commandType, int commandTimeout, object? parameters = null) 
+            => InitCommandInternal(ref command, commandText, commandType, commandTimeout, parameters);
+
+        protected abstract void InitCommandInternal(ref DbCommand command, string commandText, CommandType commandType, int commandTimeout, object? parameters = null);
+
     }
 }
