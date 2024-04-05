@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SqlCafe2
@@ -13,7 +10,7 @@ namespace SqlCafe2
         {
             try
             {
-                var cmd = Provider.InitCommand((DbCommand)Connection.CreateCommand(), command, CommandType.Text, parameters);
+                var cmd = Provider.InitCommand((DbCommand)Connection.CreateCommand(), command, CommandType.Text, 100, parameters);
 
                 return await cmd.ExecuteNonQueryAsync().ConfigureAwait(false);
             }

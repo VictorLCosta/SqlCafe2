@@ -11,7 +11,7 @@ namespace SqlCafe2.DataProviders.Sqlite
         protected override DbConnection CreateConnectionInternal(string connectionString)
             => new SQLiteConnection(connectionString);
 
-        protected override void InitCommandInternal(ref DbCommand command, string commandText, CommandType commandType, int commandTimeout, object? parameters = null)
+        protected override DbCommand InitCommandInternal(DbCommand command, string commandText, CommandType commandType, int commandTimeout, object? parameters = null)
         {
             var cmd = (SQLiteCommand)command;
 
@@ -21,10 +21,12 @@ namespace SqlCafe2.DataProviders.Sqlite
 
             if(parameters != null)
             {
-
+                
             }
 
             cmd.Prepare();
+
+            return cmd;
         }
     }
 }

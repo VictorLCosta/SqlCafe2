@@ -8,7 +8,7 @@ namespace SqlCafe.Playground
         {
             using (CafeContext context = new CafeContext())
             {
-                var a = context.GetDataTable("SELECT * FROM [dbo].[Authors]");
+                var a = context.GetDataTable("SELECT * FROM [dbo].[Authors] WHERE Country = @Country", new { Country = "Vietnam" });
 
                 var b = a;
             }

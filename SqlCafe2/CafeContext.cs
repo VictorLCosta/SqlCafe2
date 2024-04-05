@@ -115,9 +115,7 @@ namespace SqlCafe2
         {
             try
             {
-                var cmd = (DbCommand)Connection.CreateCommand();
-
-                Provider.InitCommand(ref cmd, command, CommandType.Text, 100);
+                using DbCommand cmd = Provider.InitCommand((DbCommand)Connection.CreateCommand(), command, CommandType.Text, 100, parameters);
 
                 int result = cmd.ExecuteNonQuery();
 
@@ -135,7 +133,7 @@ namespace SqlCafe2
         {
             try
             {
-                using DbCommand cmd = Provider.InitCommand((DbCommand)Connection.CreateCommand(), command, CommandType.Text);
+                using DbCommand cmd = Provider.InitCommand((DbCommand)Connection.CreateCommand(), command, CommandType.Text, 100);
 
                 return cmd.ExecuteScalar();
             }
@@ -150,7 +148,7 @@ namespace SqlCafe2
         {
             try
             {
-                using DbCommand cmd = Provider.InitCommand((DbCommand)Connection.CreateCommand(), command, CommandType.Text);
+                using DbCommand cmd = Provider.InitCommand((DbCommand)Connection.CreateCommand(), command, CommandType.Text, 100);
 
                 IDataReader reader = cmd.ExecuteReader();
 
@@ -169,9 +167,9 @@ namespace SqlCafe2
             {
                 DataTable dtReturn = new();
 
-                using DbCommand cmd = Provider.InitCommand((DbCommand)Connection.CreateCommand(), command, CommandType.Text);
-                
                 Open();
+
+                using DbCommand cmd = Provider.InitCommand((DbCommand)Connection.CreateCommand(), command, CommandType.Text, 100, parameters);
 
                 using IDataReader reader = cmd.ExecuteReader();
 

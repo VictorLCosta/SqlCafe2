@@ -1,5 +1,8 @@
 using System.Data;
 using System.Data.Common;
+using ImmediateReflection;
+using System;
+
 
 #if NETFRAMEWORK
 using System.Data.SqlClient;
@@ -18,7 +21,7 @@ namespace SqlCafe2.DataProviders.SqlServer
             return new SqlConnection(connectionString);
         }
 
-        protected override void InitCommandInternal(ref DbCommand command, string commandText, CommandType commandType, int commandTimeout, object? parameters = null)
+        protected override DbCommand InitCommandInternal(DbCommand command, string commandText, CommandType commandType, int commandTimeout, object? parameters = null)
         {
             var cmd = (SqlCommand)command;
 
@@ -28,10 +31,12 @@ namespace SqlCafe2.DataProviders.SqlServer
 
             if(parameters != null)
             {
-
+                
             }
 
             cmd.Prepare();
+
+            return cmd;
         }
     }
 }

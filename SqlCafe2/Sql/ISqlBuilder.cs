@@ -1,12 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
 namespace SqlCafe2.Sql
 {
     public interface ISqlBuilder
     {
         string ParameterPrefix { get; }
+        StringBuilder StringBuilder { get; }
     }
 }

@@ -2,27 +2,27 @@ using SqlCafe2.Enums;
 
 namespace SqlCafe2.DataProviders
 {
-    public class IDbParameter
+    public class DbCafeParameter
     {
-        public IDbParameter()
+        public DbCafeParameter()
         {
             
         }
 
-        public IDbParameter(string name, object? value)
+        public DbCafeParameter(string name, object? value)
         {
             Name = name;
             Value = value;
         }
 
-        public IDbParameter(string name, DataType dataType, object value)
+        public DbCafeParameter(string name, DataType dataType, object value)
         {
             Name = name;
             DataType = dataType;
             Value = value;
         }
 
-        public IDbParameter(string name, DataType dataType, object value, string direction)
+        public DbCafeParameter(string name, DataType dataType, object value, string direction)
         {
             Name = name;
             DataType = dataType;
@@ -30,7 +30,16 @@ namespace SqlCafe2.DataProviders
             Direction = direction;
         }
 
-        public IDbParameter(string name, DataType dataType, object value, string direction, string dbType)
+        public DbCafeParameter(string name, DataType dataType, object value, string direction, int size)
+        {
+            Name = name;
+            DataType = dataType;
+            Value = value;
+            Direction = direction;
+            Size = size;
+        }
+
+        public DbCafeParameter(string name, DataType dataType, object value, string direction, string dbType)
         {
             Name = name;
             DataType = dataType;

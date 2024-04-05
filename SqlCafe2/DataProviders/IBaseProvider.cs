@@ -14,6 +14,6 @@ namespace SqlCafe2.DataProviders
 
         DbConnection CreateConnection(string connectionString);
 
-        void InitCommand(ref DbCommand command, string commandText, CommandType commandType, int commandTimeout, object? parameters = null);
+        DbCommand InitCommand(DbCommand command, string commandText, CommandType commandType, int commandTimeout, object? parameters = null);
     }
 }

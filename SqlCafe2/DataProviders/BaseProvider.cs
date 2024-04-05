@@ -1,9 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
-using System.Threading.Tasks;
+using ImmediateReflection;
+using SqlCafe2.Enums;
 using SqlCafe2.Sql;
 
 namespace SqlCafe2.DataProviders
@@ -20,10 +20,19 @@ namespace SqlCafe2.DataProviders
 
         protected abstract DbConnection CreateConnectionInternal(string connectionString);
 
-        public void InitCommand(ref DbCommand command, string commandText, CommandType commandType, int commandTimeout, object? parameters = null) 
-            => InitCommandInternal(ref command, commandText, commandType, commandTimeout, parameters);
+        public DbCommand InitCommand(DbCommand command, string commandText, CommandType commandType, int commandTimeout, object? parameters = null) 
+            => InitCommandInternal(command, commandText, commandType, commandTimeout, parameters);
 
-        protected abstract void InitCommandInternal(ref DbCommand command, string commandText, CommandType commandType, int commandTimeout, object? parameters = null);
+        protected abstract DbCommand InitCommandInternal(DbCommand command, string commandText, CommandType commandType, int commandTimeout, object? parameters = null);
 
+        protected virtual DbCafeParameter[] GetParameters(object? parameters)
+        {
+            ObjectWrapper wrapper = new(parameters);
+
+            return wrapper
+                .GetProperties()
+                .Select(p => new DbCafeParameter(p.Name, DataType.Varchar, p.GetValue(parameters), "", 100))
+                .ToArray();
+        }
     }
 }
